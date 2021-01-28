@@ -13,7 +13,8 @@ var db core.RecipeRepository
 
 // getDB connects to the mongo db
 func getDB() core.RecipeRepository {
-	db, _ = mongo.NewMongoRespoitory("mongodb://localhost:27017", "recipes", 100)
+	db, _ = mongo.NewMongoRespoitory("mongodb://recipe-mongodb.rs.svc.cluster.local:27017", "recipes", 100)
+	//db, _ = mongo.NewMongoRespoitory("mongodb://localhost:27017", "recipes", 100)
 	return db
 }
 
@@ -25,6 +26,8 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/recipes/{recipe_id}", handler.SingleRecipe).Methods("GET")
 	r.HandleFunc("/", handler.Index).Methods("GET")
+	r.HandleFunc("/inject", handler.Inject).Methods("GET")
+    r.HandleFunc("/search", handler.Search).Methods("GET")
 
 	staticFileDirectory := http.Dir("./assets/")
 	staticFileHandler := http.StripPrefix("/assets/", http.FileServer(staticFileDirectory))

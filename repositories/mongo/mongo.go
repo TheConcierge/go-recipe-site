@@ -2,10 +2,10 @@ package mongo
 
 import (
 	"context"
-	"strings"
-	"time"
+    "time"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -51,18 +51,8 @@ func NewMongoRespoitory(mongoURL, mongoDB string, mongoTimeout int) (core.Recipe
 	return repo, nil
 }
 
-func getUniqueID(name string, timestamp int64) string {
-	nameLower := strings.ToLower(name)
-	nameDash := strings.Replace(nameLower, " ", "-", -1)
-
-	dateDash := time.Unix(timestamp, 0).Format("2006-01-02")
-
-	return nameDash + "-" + dateDash
-}
 
 func (r *mongoRepository) Store(recipe *core.Recipe) error {
-	recipe.UniqueID = getUniqueID(recipe.Name, recipe.CreatedAt)
-
 	ctx, cancel := context.WithTimeout(context.Background(), r.timeout)
 	defer cancel()
 	collection := r.client.Database(r.database).Collection("recipes")
@@ -97,7 +87,9 @@ func (r *mongoRepository) MostRecent(numResults int) ([]*core.Recipe, error) {
 	recipes := []*core.Recipe{}
 
 	fo := options.Find()
-	fo.SetSort(bson.M{"created_at": -1})
+	// most recent <numResults> recipes
+    fo.SetSort(bson.M{"created_at": -1})
+    fo.SetLimit(int64(numResults))
 
 	collection := r.client.Database(r.database).Collection("recipes")
 
@@ -122,4 +114,48 @@ func (r *mongoRepository) MostRecent(numResults int) ([]*core.Recipe, error) {
 	}
 
 	return recipes, nil
+}
+
+
+func (r *mongoRepository) Search(name string) ([]*core.Recipe, error) {
+    ctx, cancel := context.WithTimeout(context.Background(), r.timeout)
+    defer cancel()
+
+    recipes := []*core.Recipe{}
+
+    fo := options.Find()
+    fo.SetSort(bson.M{"created_at": -1})
+    // setting some responsible limit
+    // eventually I will paginate responses if I end up using this site enough
+    fo.SetLimit(30)
+
+    filter := bson.M{"recipe_name": primitive.Regex{Pattern: name, Options: "i"}}
+
+	collection := r.client.Database(r.database).Collection("recipes")
+
+    cur, err := collection.Find(ctx, filter, fo)
+    if err != nil {
+        return recipes, err
+    }
+
+    for cur.Next(ctx) {
+        recipe := &core.Recipe{}
+
+        err := cur.Decode(&recipe)
+        if err != nil {
+            // currently not sure what errors could appear here, so don't know
+            // if proper behavior would be to continue or just return what we
+            // have so far
+            return recipes, err
+        }
+        recipes = append(recipes, recipe)
+    }
+    cur.Close(ctx)
+
+    if len(recipes) == 0 {
+        return recipes, mongo.ErrNoDocuments
+    }
+
+    return recipes, nil
+
 }

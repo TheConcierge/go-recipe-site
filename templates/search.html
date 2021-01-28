@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <!--
 	Phantom by HTML5 UP
@@ -6,15 +7,15 @@
 -->
 <html>
   <head>
-    <title>{{.Name}}</title>
+    <title>Search</title>
     <meta charset="utf-8" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, user-scalable=no"
     />
-    <link rel="stylesheet" href="../assets/css/main.css" />
+    <link rel="stylesheet" href="assets/css/main.css" />
     <noscript
-      ><link rel="stylesheet" href="../assets/css/noscript.css"
+      ><link rel="stylesheet" href="assets/css/noscript.css"
     /></noscript>
   </head>
   <body class="is-preload">
@@ -25,7 +26,7 @@
         <div class="inner">
           <!-- Logo -->
           <a href="/" class="logo">
-            <span class="symbol"><img src="../images/logo.svg" alt="" /></span
+            <span class="symbol"><img src="images/logo.svg" alt="" /></span
             ><span class="title">Recipes</span>
           </a>
 
@@ -42,7 +43,7 @@
       <nav id="menu">
         <h2>Menu</h2>
         <ul>
-          <li><a href="/">Home</a></li>
+          <li><a href="index.html">Home</a></li>
           <li><a href="generic.html">Ipsum veroeros</a></li>
           <li><a href="generic.html">Tempus etiam</a></li>
           <li><a href="generic.html">Consequat dolor</a></li>
@@ -53,37 +54,30 @@
       <!-- Main -->
       <div id="main">
         <div class="inner">
-          <h1>{{.Name}}</h1>
-          <span class="image main"><img src="{{.Picture}}" alt="" /></span>
-          <p>{{.Description}}</p>
-          <section>
-            <div class="row">
-              <div col-4 col-12-medium>
-                <h2>Ingredients</h2>
-                {{range .Parts}}
-                <h4>{{.PartName}} Ingredients</h4>
-                <ul>
-                  {{range .Ingredients}}
-                  <li>{{.}}</li>
-                  {{end}}
-                </ul>
-                {{end}}
+          <header>
+            <h1>Search</h1>
+          </header>
+          <form method="get" action="/search">
+              <div class="row gtr-uniform">
+                <div class="col-12">
+                    <input type="text" name="search_name" id="search_name" value="" placeholder="Search by name">
+                </div>
               </div>
-              <div col-2 col-12-medium></div>
-              <div col-6 col-12-medium>
-                <h2>Method</h2>
-                {{range .Parts}}
-                <h4>{{.PartName}} Method</h4>
-                <ol>
-                  {{range .Instructions}}
-
-                  <li>{{.}}</li>
-
-                  {{end}}
-                </ol>
-                {{end}}
-              </div>
-            </div>
+          </form>
+          <section class="tiles">
+            {{range .}}
+            <article>
+              <span class="image">
+                <img src="{{.Picture}}" alt="" />
+              </span>
+              <a href="recipes/{{.UniqueID}}">
+                <h2>{{.Name}}</h2>
+                <div class="content">
+                  <p>{{.Blurb}}</p>
+                </div>
+              </a>
+            </article>
+            {{end}}
           </section>
         </div>
       </div>
@@ -130,10 +124,10 @@
     </div>
 
     <!-- Scripts -->
-    <script src="../assets/js/jquery.min.js"></script>
-    <script src="../assets/js/browser.min.js"></script>
-    <script src="../assets/js/breakpoints.min.js"></script>
-    <script src="../assets/js/util.js"></script>
-    <script src="../assets/js/main.js"></script>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
   </body>
 </html>

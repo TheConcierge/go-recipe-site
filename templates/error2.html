@@ -6,7 +6,7 @@
 -->
 <html>
   <head>
-    <title>{{.Name}}</title>
+    <title>{{.Error}}</title>
     <meta charset="utf-8" />
     <meta
       name="viewport"
@@ -53,35 +53,11 @@
       <!-- Main -->
       <div id="main">
         <div class="inner">
-          <h1>{{.Name}}</h1>
-          <span class="image main"><img src="{{.Picture}}" alt="" /></span>
-          <p>{{.Description}}</p>
+          <h1>{{.Error}}</h1>
+          <span class="image main"><img src="" alt="" /></span>
           <section>
             <div class="row">
               <div col-4 col-12-medium>
-                <h2>Ingredients</h2>
-                {{range .Parts}}
-                <h4>{{.PartName}} Ingredients</h4>
-                <ul>
-                  {{range .Ingredients}}
-                  <li>{{.}}</li>
-                  {{end}}
-                </ul>
-                {{end}}
-              </div>
-              <div col-2 col-12-medium></div>
-              <div col-6 col-12-medium>
-                <h2>Method</h2>
-                {{range .Parts}}
-                <h4>{{.PartName}} Method</h4>
-                <ol>
-                  {{range .Instructions}}
-
-                  <li>{{.}}</li>
-
-                  {{end}}
-                </ol>
-                {{end}}
               </div>
             </div>
           </section>
