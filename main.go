@@ -39,7 +39,7 @@ func main() {
 	r.PathPrefix("/images/").Handler(staticImageHandler).Methods("GET")
 
 	http.ListenAndServe(
-		":3000",
+		":3001",
 		r,
 	)
 }
