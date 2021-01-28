@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: website
+spec:
+  selector:
+    matchLabels:
+      app: website
+  replicas: 1
+  template: # template for the pods
+    metadata:
+      labels:
+        app: website
+    spec:
+      containers:
+      - name: website 
+        imagePullPolicy: IfNotPresent
+        image: recipe-site:latest 
